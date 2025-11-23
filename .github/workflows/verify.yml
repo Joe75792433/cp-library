@@ -1,9 +1,11 @@
 name: verify
 
-on:
-  push:
-    branches:
-    - main
+on:  
+  workflow_call:
+    inputs:
+      verify_subcommand:
+        required: true
+        type: string
 
 jobs:
   verify:
@@ -21,7 +23,7 @@ jobs:
         python-version: 3.11.2
 
     - name: Install dependencies
-      run: pip3 install -U online-judge-verify-helper
+      run: pip3 install -U git+https://github.com/Joe75792433/verification-helper.git
 
     - name: Clone AC-Library
       uses: actions/checkout@v6
@@ -37,4 +39,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         YUKICODER_TOKEN: ${{ secrets.YUKICODER_TOKEN }}
         GH_PAT: ${{ secrets.GH_PAT }}
-      run: oj-verify all
+      run: oj-verify ${{ inputs.verify_subcommand }}
