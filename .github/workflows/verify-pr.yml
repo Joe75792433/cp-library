@@ -5,7 +5,7 @@ on:
 
 jobs:
   call-verify:
-    uses: Joe75792433/cp-library/.github/workflows/verify.yml@intervalset
+    uses: Joe75792433/cp-library/.github/workflows/verify.yml@main
     with:
       verify_subcommand: test
     secrets: inherit
