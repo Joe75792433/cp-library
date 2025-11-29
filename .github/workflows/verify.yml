@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Switch default g++ to version 14
+      run: sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 100
+
     - uses: actions/checkout@v6
       with:
         path: main
