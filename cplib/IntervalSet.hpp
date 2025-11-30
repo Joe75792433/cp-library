@@ -135,6 +135,7 @@ template <std::totally_ordered coord = long long> struct IntervalSet {
 
     // todo: get_state(l, r) intersectionとexcludedを合わせる
     // get_stateを使ってnot invertibleな関数に対応する
+    // 閉区間バージョンを作る
 
     // 区間[l, r)を追加する
     // setに区間を追加した直後、追加した区間への読み取り専用イテレーターを引数としてadd_funcを呼び出す

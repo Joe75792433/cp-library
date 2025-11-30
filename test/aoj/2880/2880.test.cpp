@@ -102,9 +102,9 @@ void Main([[maybe_unused]] int testcase_i) {
     vector<bool> ans(q);
     for (auto& [day, qi, x, y] : event) {
         if (qi != INF) {
-            ans[qi] = x >= y || s.same(x, y);
+            ans[qi] = x >= y || s.mex(x) == s.mex(y);
         } else {
-            s.insert(x, y + 1);
+            s.insert(x, y);
         }
     }
     for (auto bo : ans) Yes(bo);
