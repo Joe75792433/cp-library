@@ -24,7 +24,7 @@ jobs:
     - name: Install pipx
       run: |
         apt-get update
-        apt-get install -y --no-install-recommends pipx
+        apt-get install -y pipx
         echo "/github/home/.local/bin" >> $GITHUB_PATH
 
     - name: Install oj
@@ -78,7 +78,7 @@ jobs:
     - name: Install pipx
       run: |
         apt-get update
-        apt-get install -y --no-install-recommends pipx
+        apt-get install -y pipx
         echo "/github/home/.local/bin" >> $GITHUB_PATH
 
     - name: Install oj
@@ -89,7 +89,7 @@ jobs:
     - name: Install jq
       run: |
         apt-get update
-        apt-get install jq
+        apt-get install -y jq
 
     - name: Download timestamps
       uses: actions/download-artifact@v5
