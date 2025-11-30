@@ -163,10 +163,9 @@ template <std::totally_ordered coord = long long> struct IntervalSet {
             it = set.erase(it);
         }
         // insert
-        if (l < r) {
-            it = set.emplace_hint(it, l, r);
-            add_func(static_cast<std::ranges::const_iterator_t<Set>>(it));
-        }
+        // assert(l < r);
+        it = set.emplace_hint(it, l, r);
+        add_func(static_cast<std::ranges::const_iterator_t<Set>>(it));
     }
     // 区間[l, r)を追加する
     void insert(const coord& l, const coord& r) {
