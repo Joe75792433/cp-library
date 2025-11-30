@@ -1,16 +1,20 @@
 name: verify
 
 on:  
-  workflow_call:
-    inputs:
-      verify_subcommand:
-        required: true
-        type: string
+  pull_request:
+  push:
+    branches:
+    - main
 
 jobs:
-  verify:
+  verify-test-parallel:
     runs-on: ubuntu-latest
     container: gcc:15.2.0-bookworm
+    strategy:
+      fail-fast: false
+      matrix:
+        id: ['00', '01']
+
     steps:
     - uses: actions/checkout@v6
       with:
@@ -39,7 +43,66 @@ jobs:
       working-directory: main
       env:
         CPLUS_INCLUDE_PATH: ${{ github.workspace }}/ac-library
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         YUKICODER_TOKEN: ${{ secrets.YUKICODER_TOKEN }}
+      run: |
+        oj-verify test --jobs $(nproc) $( \
+          find test -type f -name '*.test.cpp' | \
+          sort | \
+          awk -v n=${{ strategy.job-total }} \
+              -v i=${{ strategy.job-index }} \
+              '(NR - 1) % n == i {print}' \
+        )
+        cp .verify-helper/timestamps.remote.json .verify-helper/timestamps-${{ matrix.id }}.json
+    
+    - name: Upload timestamps
+      uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: timestamps
+        path: main/.verify-helper/timestamps-${{ matrix.id }}.json
+        overwrite: true
+  
+  verify-all:
+    needs: verify-test-parallel
+    if: ${{ !cancelled() && github.ref_name == github.event.repository.default_branch }}
+
+    runs-on: ubuntu-latest
+    container: gcc:15.2.0-bookworm
+
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        path: main
+        fetch-depth: 0
+
+    - name: Install pipx
+      run: |
+        apt-get update
+        apt-get install -y --no-install-recommends pipx
+        echo "/github/home/.local/bin" >> $GITHUB_PATH
+
+    - name: Install oj
+      run: |
+        pipx install online-judge-tools
+        pipx install git+https://github.com/Joe75792433/verification-helper
+
+    - name: Install jq
+      run: |
+        sudo apt-get update
+        sudo apt-get install jq
+
+    - name: Download timestamps
+      uses: actions/download-artifact@v5
+      with:
+        name: timestamps
+        path: timestamps
+
+    - name: Merge timestamps
+      run: jq --slurp --sort-keys add timestamps/* > main/.verify-helper/timestamps.remote.json
+
+    - name: Run oj-verify all
+      working-directory: main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GH_PAT: ${{ secrets.GH_PAT }}
-      run: oj-verify ${{ inputs.verify_subcommand }}
+      run: oj-verify all --jobs $(nproc)
