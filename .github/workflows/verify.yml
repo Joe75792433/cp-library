@@ -10,11 +10,8 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
-
+    container: gcc:15.2.0-bookworm
     steps:
-    - name: Switch default g++ to version 14
-      run: sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 100
-
     - uses: actions/checkout@v6
       with:
         path: main
@@ -25,7 +22,7 @@ jobs:
       with:
         python-version: 3.11.2
 
-    - name: Install dependencies
+    - name: Install oj-verify
       run: pip3 install -U git+https://github.com/Joe75792433/verification-helper.git
 
     - name: Clone AC-Library
