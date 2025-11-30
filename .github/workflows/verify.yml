@@ -17,6 +17,9 @@ jobs:
         path: main
         fetch-depth: 0
 
+    - name: Show Python version
+      run: python3 --version
+
     - name: Install oj-verify
       run: pip3 install -U git+https://github.com/Joe75792433/verification-helper.git
 
