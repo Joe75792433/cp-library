@@ -86,6 +86,13 @@ jobs:
         pipx install online-judge-tools
         pipx install git+https://github.com/Joe75792433/verification-helper
 
+    - name: Clone AC-Library
+      uses: actions/checkout@v6
+      with:
+        repository: atcoder/ac-library
+        path: ac-library
+        sparse-checkout: atcoder
+
     - name: Install jq
       run: |
         apt-get update
@@ -103,6 +110,7 @@ jobs:
     - name: Run oj-verify all
       working-directory: main
       env:
+        CPLUS_INCLUDE_PATH: ${{ github.workspace }}/ac-library
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GH_PAT: ${{ secrets.GH_PAT }}
       run: oj-verify all --jobs $(nproc)
