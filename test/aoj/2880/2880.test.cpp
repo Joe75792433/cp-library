@@ -1,4 +1,4 @@
-#define PROBLEM "https://onlinejudge.u-aizu.ac.jp/problems/2880"
+// competitive-verifier: PROBLEM https://onlinejudge.u-aizu.ac.jp/problems/2880
 #include <bits/stdc++.h>
 #include <atcoder/modint>
 #include "cplib/IntervalSet.hpp"

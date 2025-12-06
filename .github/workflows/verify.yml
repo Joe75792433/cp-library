@@ -1,117 +1,208 @@
 name: verify
-
-on:  
+on:
   pull_request:
   push:
     branches:
-    - main
+      - "main"
+  workflow_dispatch:
+    inputs:
+      ignore_prev_result:
+        type: boolean
+        default: false
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
-  verify-test-parallel:
+  setup:
     runs-on: ubuntu-latest
     container: gcc:15.2.0-bookworm
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up competitive-verifier
+        uses: competitive-verifier/actions/setup@v2
+        with:
+          cache-pip: true
+
+      # Initialize your own environment for resolving.
+      - name: oj-resolve
+        uses: competitive-verifier/actions/oj-resolve@v2
+        with:
+          output-path: verify_files.json
+          # Specify patterns
+          include: test/
+          # exclude: your-own-exclude/
+          # If you have config.toml
+          config: .competitive-verifier/config.toml
+      - name: parse-doxygen
+        uses: competitive-verifier/actions/parse-doxygen@v2
+        with:
+          verify-files: verify_files.json
+
+      - name: Upload verify_files.json
+        uses: competitive-verifier/actions/upload-verify-artifact@v2
+        with:
+          file: verify_files.json
+
+      - name: Check bundled
+        id: test-bundled
+        run: |
+          echo "count=$(find .competitive-verifier/bundled/ -type f | wc -l)" >> $GITHUB_OUTPUT
+      - name: Upload bundled
+        uses: actions/upload-artifact@v4
+        if: steps.test-bundled.outputs.count > 0
+        with:
+          name: Bundled-${{ runner.os }}
+          path: .competitive-verifier/bundled
+          retention-days: 1
+
+  verify:
+    runs-on: ubuntu-latest
+    container: gcc:15.2.0-bookworm
+    needs: [setup]
+    env:
+      SPLIT_SIZE: "2"
     strategy:
-      fail-fast: false
       matrix:
-        id: ['00', '01']
-
+        # prettier-ignore
+        index:
+          ["00", "01"]
     steps:
-    - uses: actions/checkout@v6
-      with:
-        path: main
-        fetch-depth: 0
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
-    - name: Install pipx
-      run: |
-        apt-get update
-        apt-get install -y pipx
-        echo "/github/home/.local/bin" >> $GITHUB_PATH
+      - name: Clone AC-Library
+        uses: actions/checkout@v6
+        with:
+          repository: atcoder/ac-library
+          path: ac-library
+          sparse-checkout: atcoder
 
-    - name: Install oj
-      run: |
-        pipx install online-judge-tools
-        pipx install git+https://github.com/Joe75792433/verification-helper
+      - name: Restore cached results
+        if: ${{ ! inputs.ignore_prev_result }}
+        uses: actions/cache/restore@v4
+        id: restore-cached-results
+        with:
+          path: ${{ github.workspace }}/merged-result.json
+          key: ${{ runner.os }}-verify-result-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-verify-result-
 
-    - name: Clone AC-Library
-      uses: actions/checkout@v6
-      with:
-        repository: atcoder/ac-library
-        path: ac-library
-        sparse-checkout: atcoder
+      - name: Download verify_files.json
+        uses: competitive-verifier/actions/download-verify-artifact@v2
 
-    - name: Run tests
-      working-directory: main
-      env:
-        CPLUS_INCLUDE_PATH: ${{ github.workspace }}/ac-library
-        YUKICODER_TOKEN: ${{ secrets.YUKICODER_TOKEN }}
-      run: |
-        oj-verify test --jobs $(nproc) $( \
-          find test -type f -name '*.test.cpp' | \
-          sort | \
-          awk -v n=${{ strategy.job-total }} \
-              -v i=${{ strategy.job-index }} \
-              '(NR - 1) % n == i {print}' \
-        )
-        cp .verify-helper/timestamps.remote.json .verify-helper/timestamps-${{ matrix.id }}.json
-    
-    - name: Upload timestamps
-      uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: timestamps-${{ matrix.id }}
-        path: main/.verify-helper/timestamps-${{ matrix.id }}.json
-        overwrite: true
-  
-  verify-all:
-    needs: verify-test-parallel
-    if: ${{ !cancelled() && github.ref_name == github.event.repository.default_branch }}
+      - name: Set up competitive-verifier
+        uses: competitive-verifier/actions/setup@v2
+        with:
+          cache-pip: true
 
+      - name: Verify
+        uses: competitive-verifier/actions/verify@v2
+        with:
+          destination: ${{ runner.temp }}/result.json
+          split-size: ${{ env.SPLIT_SIZE }}
+          split-index: ${{ matrix.index }}
+          timeout: 1800
+          prev-result: ${{ steps.restore-cached-results.outputs.cache-hit && 'merged-result.json' || ''}}
+        env:
+          CPLUS_INCLUDE_PATH: ${{ github.workspace }}/ac-library
+          YUKICODER_TOKEN: ${{ secrets.YUKICODER_TOKEN }}
+
+      - name: Upload result artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Result-${{ runner.os }}-${{ matrix.index }}
+          path: ${{ runner.temp }}/result.json
+          retention-days: 1
+
+  docs-and-check:
     runs-on: ubuntu-latest
-    container: gcc:15.2.0-bookworm
-
+    needs: [verify]
+    outputs:
+      upload-pages: ${{ steps.upload-pages.outcome == 'success' }}
     steps:
-    - uses: actions/checkout@v6
-      with:
-        path: main
-        fetch-depth: 0
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+  
+      - name: Download verify_files.json and all artifacts
+        id: all-artifacts
+        uses: competitive-verifier/actions/download-verify-artifact@v2
+        with:
+          download-all: true
+          artifact-root: .artifacts/
+  
+      - name: Extract bundled
+        shell: bash
+        run: |
+          rm -rf .competitive-verifier/bundled
+          if test -d "$SRCDIR"; then
+            mkdir -p .competitive-verifier/
+            mv "$SRCDIR" .competitive-verifier/bundled
+          else
+            echo "$SRCDIR does not exist."
+          fi
+        env:
+          SRCDIR: .artifacts/Bundled-${{ runner.os }}
+  
+      - name: Set up competitive-verifier
+        uses: competitive-verifier/actions/setup@v2
+        with:
+          cache-pip: true
 
-    - name: Install pipx
-      run: |
-        apt-get update
-        apt-get install -y pipx
-        echo "/github/home/.local/bin" >> $GITHUB_PATH
+      - name: Merge results
+        uses: competitive-verifier/actions/merge-result@v2
+        with:
+          result-files: ${{ steps.all-artifacts.outputs.artifacts-root }}/Result-*/result.json
+          output-path: ${{ github.workspace }}/merged-result.json
+      - name: Docs
+        uses: competitive-verifier/actions/docs@v2
+        with:
+          verify-result: ${{ github.workspace }}/merged-result.json
+          destination: _jekyll
+          write-summary: true
+      - name: Save result
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/merged-result.json
+          key: ${{ runner.os }}-verify-result-${{ github.sha }}
 
-    - name: Install oj
-      run: |
-        pipx install online-judge-tools
-        pipx install git+https://github.com/Joe75792433/verification-helper
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: _jekyll
+          destination: _site
+      - name: Upload artifact
+        id: upload-pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
 
-    - name: Clone AC-Library
-      uses: actions/checkout@v6
-      with:
-        repository: atcoder/ac-library
-        path: ac-library
-        sparse-checkout: atcoder
+      - name: Check
+        uses: competitive-verifier/actions/check@v2
+        with:
+          verify-result: ${{ steps.all-artifacts.outputs.artifacts-root }}/Result-*/result.json
 
-    - name: Install jq
-      run: |
-        apt-get update
-        apt-get install -y jq
-
-    - name: Download timestamps
-      uses: actions/download-artifact@v5
-      with:
-        path: timestamps
-        pattern: timestamps-*
-        merge-multiple: true
-
-    - name: Merge timestamps
-      run: jq --slurp --sort-keys add timestamps/* > main/.verify-helper/timestamps.remote.json
-
-    - name: Run oj-verify all
-      working-directory: main
-      env:
-        CPLUS_INCLUDE_PATH: ${{ github.workspace }}/ac-library
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GH_PAT: ${{ secrets.GH_PAT }}
-      run: oj-verify all --jobs $(nproc)
+  deploy:
+    if: (success() || failure()) && github.ref == 'refs/heads/main' && needs.docs-and-check.outputs.upload-pages == 'true'
+    needs: docs-and-check
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
