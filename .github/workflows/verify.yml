@@ -28,6 +28,13 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Setup pipx as pip
+        run: |
+          apt-get update
+          apt-get install -y pipx
+          echo "/github/home/.local/bin" >> $GITHUB_PATH
+          ln -s $(which pipx) /github/home/.local/bin/pip
+
       - name: Set up competitive-verifier
         uses: competitive-verifier/actions/setup@v2
         with:
@@ -81,6 +88,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup pipx as pip
+        run: |
+          apt-get update
+          apt-get install -y pipx
+          echo "/github/home/.local/bin" >> $GITHUB_PATH
+          ln -s $(which pipx) /github/home/.local/bin/pip
+
       - name: Clone AC-Library
         uses: actions/checkout@v6
         with:
@@ -127,6 +141,7 @@ jobs:
 
   docs-and-check:
     runs-on: ubuntu-latest
+    container: gcc:15.2.0-bookworm
     needs: [verify]
     outputs:
       upload-pages: ${{ steps.upload-pages.outcome == 'success' }}
@@ -135,6 +150,13 @@ jobs:
         with:
           fetch-depth: 0
   
+      - name: Setup pipx as pip
+        run: |
+          apt-get update
+          apt-get install -y pipx
+          echo "/github/home/.local/bin" >> $GITHUB_PATH
+          ln -s $(which pipx) /github/home/.local/bin/pip
+
       - name: Download verify_files.json and all artifacts
         id: all-artifacts
         uses: competitive-verifier/actions/download-verify-artifact@v2
