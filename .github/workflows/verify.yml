@@ -207,7 +207,9 @@ jobs:
           path: ${{ github.workspace }}/result.json
           retention-days: 1
       - name: Debug - Print current working directory
-        run: pwd
+        run: |
+          pwd
+          pwd -P
       - name: Debug - Print GITHUB_WORKSPACE value
         run: echo "Workspace is ${{ github.workspace }}"
       - name: Debug - List original location
@@ -216,6 +218,7 @@ jobs:
         run: |
           cd /__w/
           pwd
+          pwd -P
 
   docs-and-check:
     runs-on: ubuntu-latest
