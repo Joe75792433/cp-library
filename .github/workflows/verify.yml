@@ -191,7 +191,7 @@ jobs:
       - name: Verify
         uses: competitive-verifier/actions/verify@v2
         with:
-          destination: ${{ github.workspace }}/result.json
+          destination: ${{ runner.temp }}/result.json
           split-size: ${{ env.SPLIT_SIZE }}
           split-index: ${{ matrix.index }}
           timeout: 1800
@@ -204,7 +204,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Result-${{ runner.os }}-${{ matrix.index }}
-          path: ${{ github.workspace }}/result.json
+          path: ${{ runner.temp }}/../../result.json
           retention-days: 1
 
   docs-and-check:
