@@ -210,10 +210,15 @@ jobs:
         run: |
           pwd
           pwd -P
+          ls -l
       - name: Debug - Print GITHUB_WORKSPACE value
         run: echo "Workspace is ${{ github.workspace }}"
       - name: Debug - List original location
-        run: ls -l ${{ github.workspace }}
+        run: |
+          cd ${{ github.workspace }}
+          pwd
+          pwd -P
+          ls -l ${{ github.workspace }}
       - name: Debug - Print /__w/
         run: |
           cd /__w/
