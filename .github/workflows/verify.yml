@@ -224,6 +224,8 @@ jobs:
           cd /__w/
           pwd
           pwd -P
+      - name: Debug - Print GITHUB_WORKSPACE
+        run: echo $GITHUB_WORKSPACE
 
   docs-and-check:
     runs-on: ubuntu-latest
