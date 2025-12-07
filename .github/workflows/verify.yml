@@ -204,7 +204,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Result-${{ runner.os }}-${{ matrix.index }}
-          path: ~/${{ runner.temp }}/result.json
+          path: /home/runner/work/_temp/result.json
           retention-days: 1
 
   docs-and-check:
