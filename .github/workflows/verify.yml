@@ -200,16 +200,11 @@ jobs:
           CPLUS_INCLUDE_PATH: ${{ github.workspace }}/ac-library
           YUKICODER_TOKEN: ${{ secrets.YUKICODER_TOKEN }}
 
-      - name: test ls
-        run: |
-          ls -la ${{ runner.temp }}
-          cat ${{ runner.temp }}/result.json
-
       - name: Upload result artifact
         uses: actions/upload-artifact@v4
         with:
           name: Result-${{ runner.os }}-${{ matrix.index }}
-          path: ${{ runner.temp }}/result.json
+          path: ~/${{ runner.temp }}/result.json
           retention-days: 1
 
   docs-and-check:
