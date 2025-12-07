@@ -27,6 +27,8 @@ jobs:
     container: gcc:15.2.0-bookworm
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup pipx as pip
         run: |
