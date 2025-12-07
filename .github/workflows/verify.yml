@@ -67,6 +67,9 @@ jobs:
           # Delete the downloaded package file
           rm powershell_7.4.13-1.deb_amd64.deb
 
+      - name: test-ls-flies
+        run: git ls-files
+
       # Initialize your own environment for resolving.
       - name: oj-resolve
         uses: competitive-verifier/actions/oj-resolve@v2
