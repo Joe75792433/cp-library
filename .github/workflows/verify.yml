@@ -32,8 +32,8 @@ jobs:
         run: |
           apt-get update
           apt-get install -y pipx
-          echo "/github/home/.local/bin" >> $GITHUB_PATH
-          ln -s $(which pipx) /github/home/.local/bin/pip
+          echo $PATH
+          pipx install competitive-verifier
 
       - name: Set up competitive-verifier
         uses: competitive-verifier/actions/setup@v2
