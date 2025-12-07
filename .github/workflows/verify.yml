@@ -200,10 +200,10 @@ jobs:
           CPLUS_INCLUDE_PATH: ${{ github.workspace }}/ac-library
           YUKICODER_TOKEN: ${{ secrets.YUKICODER_TOKEN }}
 
-      - name: test mkdir and write
+      - name: test ls
         run: |
-          mkdir -p ${{ runner.temp }}
-          touch ${{ runner.temp }}/test.txt
+          ls -la ${{ runner.temp }}
+          cat ${{ runner.temp }}/result.json
 
       - name: Upload result artifact
         uses: actions/upload-artifact@v4
