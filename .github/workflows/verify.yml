@@ -80,6 +80,11 @@ jobs:
         with:
           verify-files: verify_files.json
 
+      - name: Install jq
+        run: |
+          apt-get update
+          apt-get install -y jq
+
       - name: Upload verify_files.json
         uses: competitive-verifier/actions/upload-verify-artifact@v2
         with:
