@@ -191,7 +191,7 @@ jobs:
       - name: Verify
         uses: competitive-verifier/actions/verify@v2
         with:
-          destination: ${{ runner.temp }}/result.json
+          destination: ${{ github.workspace }}/result.json
           split-size: ${{ env.SPLIT_SIZE }}
           split-index: ${{ matrix.index }}
           timeout: 1800
@@ -204,8 +204,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Result-${{ runner.os }}-${{ matrix.index }}
-          path: ${{ runner.temp }}/../../result.json
+          path: ${{ github.workspace }}/result.json
           retention-days: 1
+      - name: Debug - Print current working directory
+        run: pwd
+      - name: Debug - Print GITHUB_WORKSPACE value
+        run: echo "Workspace is: ${{ github.workspace }}"
+      - name: Debug - List original location
+        run: ls -l ${{ github.workspace }}
 
   docs-and-check:
     runs-on: ubuntu-latest
