@@ -212,6 +212,10 @@ jobs:
         run: echo "Workspace is ${{ github.workspace }}"
       - name: Debug - List original location
         run: ls -l ${{ github.workspace }}
+      - name: Debug - Print /__w/
+        run: |
+          cd /__w/
+          pwd
 
   docs-and-check:
     runs-on: ubuntu-latest
