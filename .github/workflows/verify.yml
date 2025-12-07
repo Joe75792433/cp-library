@@ -30,6 +30,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set safe directory
+        run: git config --global --add safe.directory /__w/cp-library/cp-library
+
       - name: Setup pipx as pip
         run: |
           apt-get update
@@ -66,9 +69,6 @@ jobs:
 
           # Delete the downloaded package file
           rm powershell_7.4.13-1.deb_amd64.deb
-
-      - name: test-ls-flies
-        run: git ls-files
 
       # Initialize your own environment for resolving.
       - name: oj-resolve
@@ -122,6 +122,9 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
+      - name: Set safe directory
+        run: git config --global --add safe.directory /__w/cp-library/cp-library
 
       - name: Setup pipx as pip
         run: |
@@ -215,6 +218,9 @@ jobs:
         with:
           fetch-depth: 0
   
+      - name: Set safe directory
+        run: git config --global --add safe.directory /__w/cp-library/cp-library
+
       - name: Setup pipx as pip
         run: |
           apt-get update
