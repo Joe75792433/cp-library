@@ -209,7 +209,7 @@ jobs:
       - name: Debug - Print current working directory
         run: pwd
       - name: Debug - Print GITHUB_WORKSPACE value
-        run: echo "Workspace is: ${{ github.workspace }}"
+        run: echo "Workspace is ${{ github.workspace }}"
       - name: Debug - List original location
         run: ls -l ${{ github.workspace }}
 
