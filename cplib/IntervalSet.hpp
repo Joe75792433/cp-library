@@ -9,7 +9,7 @@
 #include <set>
 #include <utility>
 #include <vector>
-#include "cplib/utility/intersection.hpp"
+#include "cplib/intersection.hpp"
 
 namespace cplib {
 

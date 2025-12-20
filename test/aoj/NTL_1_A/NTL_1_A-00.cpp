@@ -1,7 +1,8 @@
-// competitive-verifier: PROBLEM https://onlinejudge.u-aizu.ac.jp/problems/2880
+// competitive-verifier: PROBLEM
+// https://onlinejudge.u-aizu.ac.jp/courses/library/6/NTL/1/NTL_1_A
 #include <bits/stdc++.h>
 #include <atcoder/modint>
-#include "cplib/IntervalSet.hpp"
+#include "cplib/prime_factorization.hpp"
 #include "cplib/vector_io.hpp"
 
 using namespace std;
@@ -157,27 +158,10 @@ constexpr ll MOD = 998244353LL;
 using mint = static_modint<MOD>;
 
 void Main([[maybe_unused]] int testcase_i) {
-    din(int, n, m, q);
-    vector<tuple<int, int, int, int>> event(m + q);
-    rep(i, m) {
-        din(int, d, a, b);
-        event[i] = {d, INF, a, b};
-    }
-    rep(i, q) {
-        din(int, e, s, t);
-        event[i + m] = {e, i, s, t};
-    }
-    ranges::sort(event);
-    cplib::IntervalSet<int> s;
-    vector<bool> ans(q);
-    for (auto& [day, qi, x, y] : event) {
-        if (qi != INF) {
-            ans[qi] = x >= y || s.mex(x) == s.mex(y);
-        } else {
-            s.insert(x, y);
-        }
-    }
-    for (auto bo : ans) Yes(bo);
+    din(int, n);
+    cout << n << ":";
+    for (auto [p, c] : prime_factorization(n)) rep(i, c) cout << " " << p;
+    cout << enl;
 }
 
 int main() {
