@@ -10,7 +10,10 @@ namespace cplib {
 // 有理式 p(x)/q(x) のn次の係数を求める
 // deg(p) < deg(q) であること
 template <typename T>
-T bostan_mori(unsigned long long n, std::vector<T> p, std::vector<T> q, auto convolution_func) {
+T bostan_mori(unsigned long long n,
+              std::vector<T> p,
+              std::vector<T> q,
+              auto convolution_func) {
     while (n > 0) {
         const size_t len_q = q.size();
         std::vector<T> q_ = q;
