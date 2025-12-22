@@ -8,4 +8,5 @@ AllowShortIfStatementsOnASingleLine: true
 AllowShortLoopsOnASingleLine: true
 AlwaysBreakTemplateDeclarations: false
 
-CommentPragmas: 'competitive-verifier'
+FixNamespaceComments: true
+ReflowComments: Never
