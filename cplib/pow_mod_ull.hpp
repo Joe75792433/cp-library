@@ -1,5 +1,4 @@
-#ifndef CPLIB_POW_MOD_ULL_HPP
-#define CPLIB_POW_MOD_ULL_HPP 1
+#pragma once
 
 namespace cplib {
 
@@ -21,5 +20,3 @@ unsigned long long pow_mod_ull(unsigned long long x,
 }
 
 }  // namespace cplib
-
-#endif  // CPLIB_POW_MOD_ULL_HPP

@@ -1,5 +1,4 @@
-#ifndef CPLIB_MILLER_RABIN_HPP
-#define CPLIB_MILLER_RABIN_HPP 1
+#pragma once
 
 #include <bit>
 #include <ranges>
@@ -38,5 +37,3 @@ bool miller_rabin(const unsigned long long n,
 }
 
 }  // namespace cplib
-
-#endif  // CPLIB_MILLER_RABIN_HPP

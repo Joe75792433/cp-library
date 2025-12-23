@@ -1,5 +1,4 @@
-#ifndef CPLIB_IS_PRIME_HPP
-#define CPLIB_IS_PRIME_HPP 1
+#pragma once
 
 #include <vector>
 #include "cplib/miller_rabin.hpp"
@@ -18,5 +17,3 @@ bool is_prime(const unsigned long long n) {
 }
 
 }  // namespace cplib
-
-#endif  // CPLIB_IS_PRIME_HPP

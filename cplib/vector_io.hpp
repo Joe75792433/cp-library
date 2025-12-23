@@ -1,5 +1,4 @@
-#ifndef CPLIB_VECTOR_IO_HPP
-#define CPLIB_VECTOR_IO_HPP 1
+#pragma once
 
 #include <cassert>
 #include <iostream>
@@ -25,5 +24,3 @@ inline std::ostream& operator<<(std::ostream& os, const std::vector<T>& v) {
 }
 
 }  // namespace cplib
-
-#endif  // CPLIB_VECTOR_IO_HPP
