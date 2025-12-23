@@ -1,5 +1,4 @@
-#ifndef CPLIB_INTERSECTION_HPP
-#define CPLIB_INTERSECTION_HPP 1
+#pragma once
 
 #include <algorithm>
 #include <utility>
@@ -22,5 +21,3 @@ constexpr inline std::pair<T, T> intersection(const T& l1,
 }
 
 }  // namespace cplib
-
-#endif  // CPLIB_INTERSECTION_HPP

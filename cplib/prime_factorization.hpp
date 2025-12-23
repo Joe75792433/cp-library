@@ -1,5 +1,4 @@
-#ifndef CPLIB_PRIME_FACTORIZATION_HPP
-#define CPLIB_PRIME_FACTORIZATION_HPP 1
+#pragma once
 
 #include <cassert>
 #include <utility>
@@ -26,5 +25,3 @@ std::vector<std::pair<long long, long long>> prime_factorization(long long n) {
 }
 
 }  // namespace cplib
-
-#endif  // CPLIB_PRIME_FACTORIZATION_HPP

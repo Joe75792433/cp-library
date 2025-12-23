@@ -1,5 +1,4 @@
-#ifndef CPLIB_INTERVALSET_HPP
-#define CPLIB_INTERVALSET_HPP 1
+#pragma once
 
 #include <algorithm>
 #include <cassert>
@@ -210,5 +209,3 @@ template <std::totally_ordered coord = long long> struct IntervalSet {
 };
 
 }  // namespace cplib
-
-#endif  // CPLIB_INTERVALSET_HPP
