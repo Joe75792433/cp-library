@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cassert>
+#include <cstdint>
 #include <ranges>
 #include <vector>
 #include "cplib/bostan_mori.hpp"
@@ -12,7 +13,7 @@ namespace cplib {
 // 入力: a のうち最初の d 項、線形漸化式の 1 <= i <= d 項前の係数 c_{i-1}、
 //     畳み込み関数 convolution_func
 template <typename T>
-T linear_recurrence(unsigned long long n,
+T linear_recurrence(const uint64_t n,
                     const std::vector<T>& a,
                     const std::vector<T>& c,
                     const auto& convolution_func) {

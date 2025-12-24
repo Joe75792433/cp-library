@@ -1,19 +1,22 @@
 #pragma once
 
 #include <cassert>
+#include <cstdint>
 #include <utility>
 #include <vector>
 
 namespace cplib {
 
-// 素因数分解をする
-// (素因数, 指数) のpairを要素とするvectorを返す
-std::vector<std::pair<long long, long long>> prime_factorization(long long n) {
-    assert(n >= 1);
-    std::vector<std::pair<long long, long long>> result(0);
-    for (long long i = 2; i * i <= n; ++i) {
+// n を素因数分解する
+// (素因数, 指数) の pair を要素とする vector を返す
+// 計算量は O(n^(1/2))
+// n < (2^32-1)^2 でなければならない
+std::vector<std::pair<uint64_t, uint64_t>> prime_factorization(uint64_t n) {
+    std::vector<std::pair<uint64_t, uint64_t>> result(0);
+    // (2^32-1)^2 <= n のとき i^2 がオーバーフローして壊れる
+    for (uint64_t i = 2; i * i <= n; ++i) {
         if (n % i != 0) continue;
-        long long count = 0;
+        uint64_t count = 0;
         while (n % i == 0) {
             ++count;
             n /= i;

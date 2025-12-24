@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cassert>
+#include <cstdint>
 #include <ranges>
 #include <vector>
 
@@ -9,7 +10,7 @@ namespace cplib {
 // 有理式 p(x)/q(x) のn次の係数を求める
 // deg(p) < deg(q) かつ q[0] != 0 であること
 template <typename T>
-T bostan_mori(unsigned long long n,
+T bostan_mori(uint64_t n,
               std::vector<T> p,
               std::vector<T> q,
               const auto& convolution_func) {

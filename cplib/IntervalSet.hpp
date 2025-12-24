@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cassert>
 #include <concepts>
+#include <cstdint>
 #include <limits>
 #include <ranges>
 #include <set>
@@ -16,7 +17,7 @@ namespace cplib {
 // https://github.com/drken1215/algorithm/blob/c9e99d6fe51137f0dc10cf3ca7f28ec4b07a14a9/DataStructureSegment/intervals_management_with_noninvertible_del.cpp
 
 // 区間をsetで管理するクラス
-template <std::totally_ordered coord = long long> struct IntervalSet {
+template <std::totally_ordered coord = uint64_t> struct IntervalSet {
   public:
     struct Interval {
         coord l;
