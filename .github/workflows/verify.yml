@@ -40,8 +40,7 @@ jobs:
 
       - name: Set up pip
         run: |
-          apt-get update
-          apt-get install -y pip
+          python3 -m ensurepip --default-pip
 
       - name: Set up competitive-verifier
         uses: competitive-verifier/actions/setup@v2
