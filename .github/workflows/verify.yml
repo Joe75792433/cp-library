@@ -43,9 +43,9 @@ jobs:
           which pip
           echo ls
           ls -l /__t/Python/3.11.14/x64/bin
-          echo $(which pip)/../ >> $GITHUB_PATH
-          pip --version
+          echo /__t/Python/3.11.14/x64/bin >> $GITHUB_PATH
           /__t/Python/3.11.14/x64/bin/pip --version
+          pip --version
 
       - name: Set up competitive-verifier
         uses: competitive-verifier/actions/setup@v2
