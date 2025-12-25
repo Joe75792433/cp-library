@@ -40,7 +40,11 @@ jobs:
 
       - name: Set up pip
         run: |
+          ls /__t/Python/3.14.2/x64/lib/python3.14/site-packages
+          ls /__t/Python/3.14.2/x64/bin
           python3 -m ensurepip --default-pip
+          ls /__t/Python/3.14.2/x64/bin
+          ls /__t/Python/3.14.2/x64/lib/python3.14/site-packages
 
       - name: Set up competitive-verifier
         uses: competitive-verifier/actions/setup@v2
