@@ -41,10 +41,11 @@ jobs:
       - name: Set up pip
         run: |
           which pip
+          echo ls
+          ls -l /__t/Python/3.11.14/x64/bin
+          echo $(which pip)/../ >> $GITHUB_PATH
           pip --version
           /__t/Python/3.11.14/x64/bin/pip --version
-          echo ls
-          ls /__t/Python/3.11.14/x64/bin
 
       - name: Set up competitive-verifier
         uses: competitive-verifier/actions/setup@v2
