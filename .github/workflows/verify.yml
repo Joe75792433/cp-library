@@ -25,7 +25,7 @@ concurrency:
 jobs:
   setup:
     runs-on: ubuntu-latest
-    container: gcc:15.2.0-bookworm
+    container: gcc:15.2.0-trixie
     steps:
       - uses: actions/checkout@v6
         with:
@@ -112,7 +112,7 @@ jobs:
 
   verify:
     runs-on: ubuntu-latest
-    container: gcc:15.2.0-bookworm
+    container: gcc:15.2.0-trixie
     needs: setup
     env:
       SPLIT_SIZE: "2"
@@ -215,7 +215,7 @@ jobs:
 
   docs-and-check:
     runs-on: ubuntu-latest
-    container: gcc:15.2.0-bookworm
+    container: gcc:15.2.0-trixie
     needs: verify
     outputs:
       upload-pages: ${{ steps.upload-pages.outcome == 'success' }}
