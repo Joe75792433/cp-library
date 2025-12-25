@@ -59,17 +59,17 @@ jobs:
           # apt-get install -y wget
 
           # Download the PowerShell package file
-          wget https://github.com/PowerShell/PowerShell/releases/download/v7.4.13/powershell_7.4.13-1.deb_amd64.deb
+          wget https://github.com/PowerShell/PowerShell/releases/download/v7.6.0-preview.6/powershell-preview_7.6.0-preview.6-1.deb_amd64.deb
 
           ###################################
           # Install the PowerShell package
-          dpkg -i powershell_7.4.13-1.deb_amd64.deb
+          dpkg -i powershell-preview_7.6.0-preview.6-1.deb_amd64.deb
 
           # Resolve missing dependencies and finish the install (if necessary)
           apt-get install -f
 
           # Delete the downloaded package file
-          rm powershell_7.4.13-1.deb_amd64.deb
+          rm powershell-preview_7.6.0-preview.6-1.deb_amd64.deb
 
       # Initialize your own environment for resolving.
       - name: oj-resolve
@@ -169,17 +169,17 @@ jobs:
           # apt-get install -y wget
 
           # Download the PowerShell package file
-          wget https://github.com/PowerShell/PowerShell/releases/download/v7.4.13/powershell_7.4.13-1.deb_amd64.deb
+          wget https://github.com/PowerShell/PowerShell/releases/download/v7.6.0-preview.6/powershell-preview_7.6.0-preview.6-1.deb_amd64.deb
 
           ###################################
           # Install the PowerShell package
-          dpkg -i powershell_7.4.13-1.deb_amd64.deb
+          dpkg -i powershell-preview_7.6.0-preview.6-1.deb_amd64.deb
 
           # Resolve missing dependencies and finish the install (if necessary)
           apt-get install -f
 
           # Delete the downloaded package file
-          rm powershell_7.4.13-1.deb_amd64.deb
+          rm powershell-preview_7.6.0-preview.6-1.deb_amd64.deb
 
       - name: Set up jq
         run: |
@@ -250,17 +250,17 @@ jobs:
           # apt-get install -y wget
 
           # Download the PowerShell package file
-          wget https://github.com/PowerShell/PowerShell/releases/download/v7.4.13/powershell_7.4.13-1.deb_amd64.deb
+          wget https://github.com/PowerShell/PowerShell/releases/download/v7.6.0-preview.6/powershell-preview_7.6.0-preview.6-1.deb_amd64.deb
 
           ###################################
           # Install the PowerShell package
-          dpkg -i powershell_7.4.13-1.deb_amd64.deb
+          dpkg -i powershell-preview_7.6.0-preview.6-1.deb_amd64.deb
 
           # Resolve missing dependencies and finish the install (if necessary)
           apt-get install -f
 
           # Delete the downloaded package file
-          rm powershell_7.4.13-1.deb_amd64.deb
+          rm powershell-preview_7.6.0-preview.6-1.deb_amd64.deb
 
       - name: Set up jq
         run: |
