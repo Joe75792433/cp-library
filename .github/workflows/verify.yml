@@ -41,7 +41,7 @@ jobs:
       - name: Set up pip
         run: |
           ls -l /__t/Python/3.14.2/x64/bin
-          chmod pip
+          chmod +x pip
           echo chmod
           ls -l /__t/Python/3.14.2/x64/bin
 
