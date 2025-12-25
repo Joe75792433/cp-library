@@ -25,27 +25,22 @@ concurrency:
 jobs:
   setup:
     runs-on: ubuntu-latest
-    container: gcc:15.2.0-trixie
+    container: gcc:15.2.0-bookworm
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.11'
-
       - name: Set safe directory
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
-      - name: Set up pip
+      - name: Setup pipx as pip
         run: |
-          which pip
-          echo ls
-          ls -l /__t/Python/3.11.14/x64/bin
-          echo /__t/Python/3.11.14/x64/bin >> $GITHUB_PATH
-          /__t/Python/3.11.14/x64/bin/pip --version
-          pip --version
+          apt-get update
+          apt-get install -y pipx
+          mkdir -p /github/home/.local/bin
+          echo "/github/home/.local/bin" >> $GITHUB_PATH
+          ln -s $(which pipx) /github/home/.local/bin/pip
 
       - name: Set up competitive-verifier
         uses: competitive-verifier/actions/setup@v2
